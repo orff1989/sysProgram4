@@ -1,4 +1,3 @@
-#include "graph.h"
 #include "graph.c"
 #include <stdio.h>
 #include <stdlib.h>
@@ -17,6 +16,6 @@ int main(int argc, char const *argv[])
         g=(graph*)malloc(sizeof(graph*));
         ch=build_graph_cmd(g);
     }
-   
+    printGraph_cmd(g);
     return 0;
 }

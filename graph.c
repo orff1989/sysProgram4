@@ -4,56 +4,103 @@
 #include <ctype.h>
 #include <unistd.h>
 
-char build_graph_cmd(graph *g){
-    int number_of_nodes;   //getting the numbers of nodes
-    scanf("%d", &number_of_nodes);
-    g->Vsize=number_of_nodes;
-    for (int i = 0; i < number_of_nodes; i++){
-    g->head[i]=NULL;
-    }
+typedef struct node {
+    int numOfNode;
+    struct node *next; 
+    float w;
+}Node;
 
-    char ch;
-    int srcc,destt;
-    char isDest;
-    float ww;
+
+typedef struct Greph{
+    Node **head;
+    int Vsize; //this var is represent the number of nodes
+}graph;
+
+
+
+char build_graph_cmd(graph *g){
     
+    char isDest,c;
+    int srcc, destt, ww,number_of_nodes;
     Node *prevNode=NULL;
 
-    ch = getchar();
-    while (ch=='n'){ //while to get the txt
-       
-       scanf("%d", &srcc);
-       scanf("%c", &isDest);
+    fflush(stdin);
+    while (getchar()!=' ');
+    number_of_nodes = getchar()-'0';
+    
+    fflush(stdin);
+    while (getchar()!=' ');
+    c= getchar();
+
+    g->Vsize=number_of_nodes;
+
+    g->head=(Node**)malloc(number_of_nodes*sizeof(Node*));
+    
+    for (int i = 0; i < number_of_nodes; i++){
+    *((g->head)+i)=NULL;
+    }
+    
+    
+    while (c=='n'){ 
+
+       fflush(stdin);
+       while (getchar()!=' ');
+       srcc = getchar()-'0';
+
+       fflush(stdin);
+       while (getchar()!=' ');
+       isDest=getchar();
+
        while (isdigit(isDest)){
            destt= isDest -'0';
-           scanf("%f", &ww);
+
+           fflush(stdin);
+           while (getchar()!=' ');
+           ww= getchar()-'0';
 
            Node *node =(Node*)malloc(sizeof(Node)); //allocating memory for the node
            (*node).next=NULL;
-            (*node).numOfNode=destt;
-            (*node).w=ww;
+           (*node).numOfNode=destt;
+           (*node).w=ww;
             
-           if (!prevNode){
-               g->head[srcc]=node;
-           } else{
-               prevNode->next=node;
-           }
-           prevNode=node;
-       }
-     }
-}
-// void printGraph_cmd(graph *g){
-//     for (int i = 0; i < g->Vsize; i++)
-//     {
-//         Node *n = NULL;
-//         n = g->head[i];
-//         while (!n)
-//         {
-//            printf("(%d —> %d)\t", i, n->numOfNode);
-//            n=n->next;
-//         }
-//         printf("\n");
+           node->next=g->head[srcc];
+           g->head[srcc]=node;
 
-//     }
+            fflush(stdin);
+            if(scanf("%c",&isDest)<0){
+                isDest=NULL;
+            }else{
+                if (isDest=='\n')
+                {
+                    isDest=NULL;
+                    break;
+                }
+                
+                fflush(stdin);
+                isDest=getchar();
+            }
+       }
+       c=isDest;
+    }
+
+    return c;
+}
+
+void printGraph_cmd(graph *g){
+    for (int i = 0; i < g->Vsize; i++)
+    {
+        
+        Node *n = g->head[i];
+        while (n!=NULL)
+        {
+           printf("(%d —> %d)\t", i, n->numOfNode);
+           n=n->next;
+        }
+        printf("\n");
+
+    }
     
-// }
+}
+void freeGraph(graph *g){
+    
+}
